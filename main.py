@@ -1,4 +1,5 @@
 import tkinter
+from tkinter import messagebox
 
 WHITESMOKE = 'whitesmoke'
 
@@ -13,16 +14,21 @@ def add_password():
     email_info = email_input.get()
     password_info = password_input.get()
 
-    with open('password.txt', 'a+') as file:
-        #move read cursor to start of file
-        file.seek(0)
-        #If file is not empty then append '\n'
-        data = file.read(100)
-        if len(data) > 0:
-            file.write('\n')
-        file.write(f'Website: {website_info} | Email or Username: {email_info} | Password: {password_info}')
-        file.close()
-
+    if website_info and email_info and password_info != '':
+        is_ok = messagebox.askokcancel(title=website_info, message='Are you sure you want to save these credentials?')
+        if is_ok:
+            with open('password.txt', 'a+') as file:
+                # move read cursor to start of file
+                file.seek(0)
+                # If file is not empty then append '\n'
+                data = file.read(100)
+                if len(data) > 0:
+                    file.write('\n')
+                file.write(f'Website: {website_info} | Email or Username: {email_info} | Password: {password_info}')
+                file.close()
+            messagebox.showinfo(title='Success', message='Password successfully saved to file!')
+    else:
+        messagebox.showinfo(title='Error', message='Please enter Website, Email/Username, AND Password.')
     clear_inputs()
 
 
@@ -30,6 +36,8 @@ def clear_inputs():
     website_input.delete(0, tkinter.END)
     email_input.delete(0, tkinter.END)
     password_input.delete(0, tkinter.END)
+
+
 # ---------------------------- UI SETUP ------------------------------- #
 
 window = tkinter.Tk()
