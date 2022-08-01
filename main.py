@@ -13,11 +13,23 @@ def add_password():
     email_info = email_input.get()
     password_info = password_input.get()
 
-    file = open('password.txt', 'a')
-    file.write(f'Website: {website_info} | Email: {email_info} | Password: {password_info}')
-    file.close()
+    with open('password.txt', 'a+') as file:
+        #move read cursor to start of file
+        file.seek(0)
+        #If file is not empty then append '\n'
+        data = file.read(100)
+        if len(data) > 0:
+            file.write('\n')
+        file.write(f'Website: {website_info} | Email or Username: {email_info} | Password: {password_info}')
+        file.close()
+
+    clear_inputs()
 
 
+def clear_inputs():
+    website_input.delete(0, tkinter.END)
+    email_input.delete(0, tkinter.END)
+    password_input.delete(0, tkinter.END)
 # ---------------------------- UI SETUP ------------------------------- #
 
 window = tkinter.Tk()
