@@ -1,4 +1,5 @@
 import tkinter
+import pyperclip
 from tkinter import messagebox
 from random import choice, randint, shuffle
 
@@ -30,7 +31,7 @@ def generate_password():
     password = ''.join(password_list)
     # Populate the password entry field with the newly generated password
     password_input.insert(0, password)
-
+    pyperclip.copy(password)
 # ---------------------------- SAVE PASSWORD ------------------------------- #
 # Create txt file
 # file = open('password.txt', 'w')
