@@ -1,10 +1,35 @@
 import tkinter
 from tkinter import messagebox
+from random import choice, randint, shuffle
 
 WHITESMOKE = 'whitesmoke'
 
 
 # ---------------------------- PASSWORD GENERATOR ------------------------------- #
+def generate_password():
+    letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n',
+               'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
+               'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N',
+               'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
+
+    numbers = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
+
+    symbols = ['!', '@', '#', '$', '%', '&', '*', '+', '_']
+
+    password_list = []
+
+    [password_list.append(choice(letters)) for letter in range(randint(8, 10))]
+
+    [password_list.append(choice(numbers)) for number in range(randint(2, 4))]
+
+    [password_list.append(choice(symbols)) for symbol in range(randint(2, 4))]
+
+    shuffle(password_list)
+
+    # Turn items in password_list into a single string with .join()
+    password = ''.join(password_list)
+    # Populate the password entry field with the newly generated password
+    password_input.insert(0, password)
 
 # ---------------------------- SAVE PASSWORD ------------------------------- #
 # Create txt file
@@ -68,7 +93,7 @@ email_input.grid(column=1, row=2, columnspan=2)
 password_input = tkinter.Entry(width=35)
 password_input.grid(column=1, row=3, columnspan=2)
 
-generate_password_button = tkinter.Button(text='Generate Password')
+generate_password_button = tkinter.Button(text='Generate Password', bg='light blue', command=generate_password)
 generate_password_button.grid(column=2, row=3)
 
 save_password_button = tkinter.Button(text='Save Password', bg='light green', command=add_password)
