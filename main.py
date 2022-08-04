@@ -1,3 +1,4 @@
+import json
 import tkinter
 import pyperclip
 from tkinter import messagebox
@@ -32,29 +33,39 @@ def generate_password():
     # Populate the password entry field with the newly generated password
     password_input.insert(0, password)
     pyperclip.copy(password)
+
+
 # ---------------------------- SAVE PASSWORD ------------------------------- #
-# Create txt file
-# file = open('password.txt', 'w')
+
 def add_password():
     website_info = website_input.get()
     email_info = email_input.get()
     password_info = password_input.get()
+    new_data = {website_info: {
+        'email': email_info,
+        'password': password_info
+    }}
 
-    if website_info and email_info and password_info != '':
-        is_ok = messagebox.askokcancel(title=website_info, message='Are you sure you want to save these credentials?')
-        if is_ok:
-            with open('password.txt', 'a+') as file:
-                # move read cursor to start of file
-                file.seek(0)
-                # If file is not empty then append '\n'
-                data = file.read(100)
-                if len(data) > 0:
-                    file.write('\n')
-                file.write(f'Website: {website_info} | Email or Username: {email_info} | Password: {password_info}')
-                file.close()
-            messagebox.showinfo(title='Success', message='Password successfully saved to file!')
+    if len(website_info) == 0 or len(email_info) == 0 or len(password_info) == 0:
+        messagebox.showinfo(title='Error', message='Please enter information into all fields')
     else:
-        messagebox.showinfo(title='Error', message='Please enter Website, Email/Username, AND Password.')
+        try:
+            with open('password.json', 'r') as file:
+                # Reading old data
+                data = json.load(file)
+        except FileNotFoundError:
+            with open('password.json', 'w') as file:
+                json.dump(new_data, file, indent=4)
+                file.close()
+                messagebox.showinfo(title='Success', message='Password successfully saved to file!')
+        else:
+            # Updating old data with new data
+            data.update(new_data)
+            # Write updated data to file
+            with open('password.json', 'w') as file:
+                json.dump(data, file, indent=4)
+                file.close()
+                messagebox.showinfo(title='Success', message='File successfully updated! New info saved.')
     clear_inputs()
 
 
