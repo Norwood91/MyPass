@@ -38,7 +38,7 @@ def generate_password():
 # ---------------------------- SAVE PASSWORD ------------------------------- #
 
 def add_password():
-    website_info = website_input.get()
+    website_info = website_input.get().capitalize()
     email_info = email_input.get()
     password_info = password_input.get()
     new_data = {website_info: {
@@ -69,6 +69,28 @@ def add_password():
     clear_inputs()
 
 
+def search():
+    searched_website = website_input.get().capitalize()
+
+    if len(searched_website) == 0:
+        messagebox.showinfo(title='Error', message='Please enter the website\'s name in the field')
+    else:
+        try:
+            with open('password.json', 'r') as file:
+                data = json.load(file)
+        except FileNotFoundError:
+            messagebox.showinfo(title='Error', message='No data file exists. Save a password to create one!')
+        else:
+            if searched_website in data:
+                email = data[searched_website]['email']
+                password = data[searched_website]['password']
+                messagebox.showinfo(title=searched_website, message=f'Email: {email}\nPassword: {password}')
+                file.close()
+            else:
+                messagebox.showinfo(title='Error', message=f'No details for {searched_website} exist.')
+
+
+
 def clear_inputs():
     website_input.delete(0, tkinter.END)
     email_input.delete(0, tkinter.END)
@@ -95,20 +117,23 @@ email_label.grid(column=0, row=2)
 password_label = tkinter.Label(text='Password: ')
 password_label.grid(column=0, row=3)
 
-website_input = tkinter.Entry(width=35)
-website_input.grid(column=1, row=1, columnspan=2)
+website_input = tkinter.Entry(width=30)
+website_input.grid(column=1, row=1)
 website_input.focus()
 
-email_input = tkinter.Entry(width=35)
-email_input.grid(column=1, row=2, columnspan=2)
+email_input = tkinter.Entry(width=30)
+email_input.grid(column=1, row=2, columnspan=1)
 
-password_input = tkinter.Entry(width=35)
-password_input.grid(column=1, row=3, columnspan=2)
+password_input = tkinter.Entry(width=30)
+password_input.grid(column=1, row=3)
 
-generate_password_button = tkinter.Button(text='Generate Password', bg='light blue', command=generate_password)
+search_button = tkinter.Button(text='Search Website', bg='yellow', width=12, command=search)
+search_button.grid(column=2, row=1)
+
+generate_password_button = tkinter.Button(text='Create Password', bg='light blue', command=generate_password)
 generate_password_button.grid(column=2, row=3)
 
-save_password_button = tkinter.Button(text='Save Password', bg='light green', command=add_password)
+save_password_button = tkinter.Button(text='Save Password', bg='light green', width=25, command=add_password)
 save_password_button.grid(column=1, row=4)
 
 window.mainloop()
